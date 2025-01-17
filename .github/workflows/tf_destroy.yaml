@@ -1,4 +1,4 @@
-name: Teardown Application
+name: AWS Teardown
 
 on:
   workflow_dispatch:
