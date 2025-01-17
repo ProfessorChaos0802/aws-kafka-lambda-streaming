@@ -1,7 +1,7 @@
 # This workflow installs the latest version of Terraform CLI and configures the Terraform CLI configuration file
 # with an API token for Terraform Cloud (app.terraform.io). On push/pull_requests to tf/dev runs a tf plan
 
-name: tf/dev
+name: AWS Setup
 
 on:
   workflow_dispatch:
