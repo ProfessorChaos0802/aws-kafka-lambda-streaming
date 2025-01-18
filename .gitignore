@@ -1,4 +1,7 @@
+# Files
+**/.terraform.lock.hcl
+
 # Directories
 .vscode
-.terraform/*
+**/.terraform/
 **/coverage/

@@ -5,23 +5,13 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
   enhanced_monitoring    = "DEFAULT"
 
   broker_node_group_info {
-    instance_type = "kafka.t3.small"
+    instance_type   = "kafka.t3.small"
+    ebs_volume_size = 10
     client_subnets = [
       aws_subnet.aws_msk_streaming_east2a.id,
       aws_subnet.aws_msk_streaming_east2b.id,
       aws_subnet.aws_msk_streaming_east2c.id
     ]
-
-    storage_info {
-      ebs_storage_info {
-        provisioned_throughput {
-          enabled           = true
-          volume_throughput = 250
-        }
-
-        volume_size = 1000
-      }
-    }
 
     security_groups = [
       aws_security_group.msk_sg.id
