@@ -54,37 +54,30 @@ variable "vpc_id" {
   default     = "vpc-professorchaos0802"
 }
 
-variable "public1_subnet_cidr" {
+variable "lambda_subnet_cidr" {
   description = "CIDR block for aws-msk-streaming public subnet 1"
   type        = string
   nullable    = false
-  default     = "10.0.1.0/28"
-}
-
-variable "public2_subnet_cidr" {
-  description = "CIDR block for aws-msk-streaming public subnet 2"
-  type        = string
-  nullable    = false
-  default     = "10.0.1.16/28"
+  default     = "10.0.2.0/28"
 }
 
 variable "subnet_a_cidr" {
   description = "CIDR block for aws-msk-streaming subnet A"
   type        = string
   nullable    = false
-  default     = "10.0.1.32/28"
+  default     = "10.0.2.16/28"
 }
 
 variable "subnet_b_cidr" {
   description = "CIDR block for aws-msk-streaming subnet B"
   type        = string
   nullable    = false
-  default     = "10.0.1.48/28"
+  default     = "10.0.2.32/28"
 }
 
 variable "subnet_c_cidr" {
   description = "CIDR block for aws-msk-streaming subnet C"
   type        = string
   nullable    = false
-  default     = "10.0.1.64/28"
+  default     = "10.0.2.48/28"
 }

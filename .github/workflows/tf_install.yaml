@@ -33,8 +33,7 @@ env:
   TF_VAR_subnet_a_cidr: ${{ vars.SUBNET_A_CIDR }}
   TF_VAR_subnet_b_cidr: ${{ vars.SUBNET_B_CIDR }}
   TF_VAR_subnet_c_cidr: ${{ vars.SUBNET_C_CIDR }}
-  TF_VAR_public1_subnet_cidr: ${{ vars.PUBLIC1_SUBNET_CIDR }}
-  TF_VAR_public2_subnet_cidr: ${{ vars.PUBLIC2_SUBNET_CIDR }}
+  TF_VAR_lambda_subnet_cidr: ${{ vars.LAMBDA_SUBNET_CIDR }}
 
 jobs:
   terraform:

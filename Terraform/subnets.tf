@@ -1,22 +1,10 @@
-resource "aws_subnet" "aws_msk_streaming_public1" {
+resource "aws_subnet" "aws_msk_streaming_lambda_subnet" {
   vpc_id                  = var.vpc_id
-  cidr_block              = var.public1_subnet_cidr
+  cidr_block              = var.lambda_subnet_cidr
   availability_zone       = "${var.region}a"
   map_public_ip_on_launch = true
   tags = {
     Name    = "AWS MSK Streaming Public1 Subnet"
-    project = var.project
-    owner   = var.owner
-  }
-}
-
-resource "aws_subnet" "aws_msk_streaming_public2" {
-  vpc_id                  = var.vpc_id
-  cidr_block              = var.public2_subnet_cidr
-  availability_zone       = "${var.region}b"
-  map_public_ip_on_launch = true
-  tags = {
-    Name    = "AWS MSK Streaming Public2 Subnet"
     project = var.project
     owner   = var.owner
   }
