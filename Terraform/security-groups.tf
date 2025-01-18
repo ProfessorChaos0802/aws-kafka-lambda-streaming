@@ -21,7 +21,7 @@ resource "aws_security_group_rule" "msk_sg_egress" {
 resource "aws_security_group_rule" "msk_sg_ingress" {
   type              = "ingress"
   security_group_id = aws_security_group.msk_sg.id
-  cidr_blocks       = [var.aws_msk_streaming_lambda_subnet.cidr_block]
+  cidr_blocks       = [var.lambda_subnet_cidr]
   description       = "AWS MSK Lambda Streaming MSK Ingress Rule"
   from_port         = 9094
   to_port           = 9094

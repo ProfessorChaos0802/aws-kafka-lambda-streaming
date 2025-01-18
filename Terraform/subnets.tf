@@ -4,7 +4,7 @@ resource "aws_subnet" "aws_msk_streaming_lambda_subnet" {
   availability_zone       = "${var.region}a"
   map_public_ip_on_launch = true
   tags = {
-    Name    = "AWS MSK Streaming Public1 Subnet"
+    Name    = "AWS MSK Streaming Lambda Subnet"
     project = var.project
     owner   = var.owner
   }
