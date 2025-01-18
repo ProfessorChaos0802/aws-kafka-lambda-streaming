@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "msk_logs_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "msk_logging_policy" {
-  bucket = aws_s3_bucket.msk_logging_bucket.id
+  bucket = aws_s3_bucket.msk_logs_bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17",
