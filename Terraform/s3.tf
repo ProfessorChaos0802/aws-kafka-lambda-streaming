@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "msk_logs_bucket" {
-  bucket = "msk-logs-bucket"
+  bucket = "msk-logs-bucket-${var.account_id}"
 
   tags = {
     project = var.project
