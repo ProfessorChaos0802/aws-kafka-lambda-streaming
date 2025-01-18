@@ -12,6 +12,17 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
       aws_subnet.aws_msk_streaming_east2c.id
     ]
 
+    storage_info {
+      ebs_storage_info {
+        provisioned_throughput {
+          enabled           = true
+          volume_throughput = 250
+        }
+
+        volume_size = 1000
+      }
+    }
+
     security_groups = [
       aws_security_group.msk_sg.id
     ]
@@ -27,6 +38,20 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
     encryption_in_transit {
       client_broker = "TLS"
       in_cluster    = "true"
+    }
+  }
+
+  logging_info {
+    broker_logs {
+      cloudwatch_logs {
+        enabled   = true
+        log_group = aws_cloudwatch_log_group.msk_cloudwatch_group.name
+      }
+      s3 {
+        enabled = true
+        bucket  = aws_s3_bucket.msk_logs_bucket.id
+        prefix  = "logs/msk-"
+      }
     }
   }
 
