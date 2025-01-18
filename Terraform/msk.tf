@@ -16,12 +16,6 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
     security_groups = [
       aws_security_group.msk_sg.id
     ]
-
-    storage_info {
-      ebs_storage_info {
-        volume_size = 10
-      }
-    }
   }
 
   client_authentication {
