@@ -5,3 +5,4 @@
 .vscode
 **/.terraform/
 **/coverage/
+**/node_modules/

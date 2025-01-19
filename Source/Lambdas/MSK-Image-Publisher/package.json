@@ -1,0 +1,21 @@
+{
+  "name": "msk-image-publisher",
+  "version": "1.0.0",
+  "description": "Published images uploaded to an S3 bucket to a MSK topic",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [
+    "AWS",
+    "MSK",
+    "S3",
+    "Lambda"
+  ],
+  "author": "Charlie Hahm",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "kafkajs": "^2.2.4"
+  }
+}
