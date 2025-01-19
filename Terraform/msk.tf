@@ -1,5 +1,5 @@
 resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
-  cluster_name           = "msk_lambda_streaming_cluster"
+  cluster_name           = "mskLambdaStreamingCluster"
   number_of_broker_nodes = 3
   kafka_version          = "3.2.0"
   enhanced_monitoring    = "DEFAULT"
