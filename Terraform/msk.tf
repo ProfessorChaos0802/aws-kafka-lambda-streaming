@@ -13,7 +13,7 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
 
         provisioned_throughput {
           enabled           = true
-          volume_throughput = 100
+          volume_throughput = 250
         }
       }
     }
