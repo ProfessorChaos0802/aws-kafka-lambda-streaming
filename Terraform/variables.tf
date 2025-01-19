@@ -1,15 +1,29 @@
-variable "owner" {
-  description = "Owner of the project"
-  type        = string
-  nullable    = false
-  default     = "Charlie Hahm"
-}
-
 variable "region" {
   description = "AWS Region to build infrastructure in"
   type        = string
   default     = "us-east-2"
   nullable    = false
+}
+
+variable "tf_backend_bucket" {
+  description = "AWS S3 bucket to store Terraform state"
+  type        = string  
+  nullable    = false
+  default     = "aws-kafka-lambda-streaming-tfstate-048908104884"
+}
+
+variable "tf_backend_key" {
+  description = "AWS S3 bucket key to store Terraform state"
+  type        = string
+  nullable    = false
+  default     = "aws-kafka-lambda-streaming.tfstate"
+}
+
+variable "owner" {
+  description = "Owner of the project"
+  type        = string
+  nullable    = false
+  default     = "Charlie Hahm"
 }
 
 variable "account_id" {

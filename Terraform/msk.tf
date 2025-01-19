@@ -9,7 +9,7 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
 
     storage_info {
       ebs_storage_info {
-        volume_size = 1
+        volume_size = 10
 
         provisioned_throughput {
           enabled           = true

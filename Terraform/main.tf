@@ -8,9 +8,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "aws-kafka-lambda-streaming-tfstate-048908104884"
-    region = "us-east-2"
-    key    = "aws-kafka-lambda-streaming.tfstate"
+    bucket = var.tf_backend_bucket
+    region = var.region
+    key    = var.tf_backend_key
   }
 
 }
