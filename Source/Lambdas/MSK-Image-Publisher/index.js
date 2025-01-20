@@ -3,9 +3,9 @@ const { Kafka } = require('kafkajs');
 
 exports.handler = async (event) =>{
     const kafka = new Kafka({
-    clientId: 'msk-image-publisher',
+    clientId: 's3-msk-image-publisher',
     brokers: [
-        process.env.KAFKA_BROKER
+        process.env.MSK_BROKER_LIST.split(',')
     ],
     ssl: {
         rejectUnauthorized: true
@@ -43,7 +43,7 @@ exports.handler = async (event) =>{
         const data = await s3.getObject(params).promise();
 
         await producer.send({
-            topic: process.env.KAFKA_TOPIC,
+            topic: process.env.MSK_TOPIC,
             messages: [
                 { key: objectKey, value: data.Body.toString('base64') }
             ]

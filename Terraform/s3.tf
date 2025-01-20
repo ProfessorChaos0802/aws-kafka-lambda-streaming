@@ -43,16 +43,6 @@ resource "aws_s3_bucket_policy" "msk_logging_policy" {
   })
 }
 
-resource "aws_s3_bucket_acl" "msk_image_bucket_acl" {
-  bucket = aws_s3_bucket.msk_image_bucket.id
-  acl    = "private"
-}
-
-resource "aws_s3_bucket_acl" "msk_logs_bucket_acl" {
-  bucket = aws_s3_bucket.msk_logs_bucket.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_notification" "msk_image_bucket_notification" {
   bucket = aws_s3_bucket.msk_image_bucket.id
 

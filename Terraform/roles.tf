@@ -22,7 +22,7 @@ resource "aws_iam_role_policy_attachment" "s3_msk_image_publisher_execution_poli
 
 resource "aws_iam_role_policy_attachment" "s3_msk_image_publisher_s3_access_policy" {
   role       = aws_iam_role.s3_msk_image_publisher_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSS3ReadOnlyAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
 resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
