@@ -1,8 +1,8 @@
 const AWS = require('aws-sdk');
 const { Kafka } = require('kafkajs');
 
-const s3 = new AWS.S3();
-const kafka = new Kafka({
+exports.handler = async (event) =>{
+    const kafka = new Kafka({
     clientId: 'msk-image-publisher',
     brokers: [
         process.env.KAFKA_BROKER
@@ -28,10 +28,34 @@ const kafka = new Kafka({
             }
         }
     },
-});
+    });
 
-const producer = kafka.producer();
+    const producer = kafka.producer();
+    await producer.connect();
 
-exports.handler = async (event) =>{
+    for (const record of event.Records) {
+        const bucketName = record.s3.bucket.name;
+        const key = record.s3.object.key;
 
+        const s3 = new AWS.S3();
+        const params = { Bucket: bucketName, Key: key };
+
+        const data = await s3.getObject(params).promise();
+
+        await producer.send({
+            topic: process.env.KAFKA_TOPIC,
+            messages: [
+                { key: objectKey, value: data.Body.toString('base64') }
+            ]
+        });
+
+        await producer.disconnect();
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                message: "Successfully published image to MSK"
+            })
+        }
+    }
 }

@@ -7,6 +7,15 @@ resource "aws_s3_bucket" "msk_logs_bucket" {
   }
 }
 
+resource "aws_s3_bucket" "msk_image_bucket" {
+  bucket = "msk-image-bucket-${var.account_id}"
+
+  tags = {
+    project = var.project
+    owner   = var.owner
+  }
+}
+
 resource "aws_s3_bucket_policy" "msk_logging_policy" {
   bucket = aws_s3_bucket.msk_logs_bucket.id
 
@@ -32,4 +41,25 @@ resource "aws_s3_bucket_policy" "msk_logging_policy" {
       }
     ]
   })
+}
+
+resource "aws_s3_bucket_acl" "msk_image_bucket_acl" {
+  bucket = aws_s3_bucket.msk_image_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_acl" "msk_logs_bucket_acl" {
+  bucket = aws_s3_bucket.msk_logs_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_notification" "msk_image_bucket_notification" {
+  bucket = aws_s3_bucket.msk_image_bucket.id
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.s3_msk_image_publisher.arn
+    events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = ""
+    filter_suffix       = ".jpg" # Only trigger on image uploads
+  }
 }
