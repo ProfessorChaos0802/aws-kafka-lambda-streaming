@@ -1,6 +1,9 @@
 resource "aws_s3_bucket" "msk_logs_bucket" {
   bucket = "msk-logs-bucket-${var.account_id}"
 
+  # Force deletion on terraform destory
+  force_destroy = true
+
   tags = {
     project = var.project
     owner   = var.owner
@@ -9,6 +12,9 @@ resource "aws_s3_bucket" "msk_logs_bucket" {
 
 resource "aws_s3_bucket" "msk_image_bucket" {
   bucket = "msk-image-bucket-${var.account_id}"
+
+  # Force deletion on terraform destory
+  force_destroy = true
 
   tags = {
     project = var.project
