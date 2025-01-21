@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const { Kafka } = require('kafkajs');
 
-exports.handler = async (event) =>{
+exports.handler = async (event, context) =>{
     const kafka = new Kafka({
     clientId: 's3-msk-image-publisher',
     brokers: [
