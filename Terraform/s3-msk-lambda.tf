@@ -29,7 +29,7 @@ resource "aws_lambda_function" "s3_msk_image_publisher" {
   environment {
     variables = {
       MSK_TOPIC              = "${aws_s3_bucket.msk_image_bucket.id}-s3-image-streaming"
-      MSK_BROKER_LIST        = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_tls
+      MSK_BROKER_LIST        = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
       MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_msk_image_publisher_role.arn
     }
   }
@@ -54,5 +54,5 @@ resource "aws_lambda_permission" "allow_s3_invoke" {
 }
 
 output "broker_list" {
-  value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers
+  value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
 }
