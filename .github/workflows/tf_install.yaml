@@ -70,6 +70,10 @@ jobs:
     - name: Terraform Format
       run: terraform -chdir=Terraform fmt -check
 
+    # Install MSK-Image-Publisher Lambda Dependencies
+    - name: Install MSK-Image-Publisher Lambda Dependencies
+      run: npm --prefix Source/Lambdas/MSK-Image-Publisher/ install
+
     # Validate Terraform
     - name: Terraform Validate
       run: terraform -chdir=Terraform validate
