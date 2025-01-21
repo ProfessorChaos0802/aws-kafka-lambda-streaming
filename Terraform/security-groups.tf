@@ -27,3 +27,23 @@ resource "aws_security_group_rule" "msk_sg_ingress" {
   to_port           = 9094
   protocol          = "tcp"
 }
+
+resource "aws_security_group" "lambda_sg" {
+  name_prefix = "lambda_sg"
+  vpc_id      = var.vpc_id
+  tags = {
+    Name    = "Lambda Security Group"
+    project = var.project
+    owner   = var.owner
+  }
+}
+
+resource "aws_security_group_rule" "lambda_sg_egress_to_msk" {
+  type              = "egress"
+  security_group_id = aws_security_group.lambda_sg.id
+  cidr_blocks       = [var.vpc_cidr] # Ensures traffic goes to MSK SG
+  description       = "Allow Lambda to connect to MSK brokers"
+  from_port         = 9094
+  to_port           = 9094
+  protocol          = "tcp"
+}
