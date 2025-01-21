@@ -33,6 +33,15 @@ resource "aws_lambda_function" "s3_msk_image_publisher" {
       MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_msk_image_publisher_role.arn
     }
   }
+
+  tags = {
+    project = var.project
+    owner   = var.owner
+  }
+
+  depends_on = [
+    aws_msk_cluster.msk_lambda_streaming_cluster
+  ]
 }
 
 # Lambda Permission for S3 to Invoke
@@ -42,4 +51,8 @@ resource "aws_lambda_permission" "allow_s3_invoke" {
   function_name = aws_lambda_function.s3_msk_image_publisher.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.msk_image_bucket.arn
+}
+
+output "broker_list" {
+  value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_tls
 }
