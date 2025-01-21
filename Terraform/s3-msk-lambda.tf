@@ -1,7 +1,7 @@
 data "archive_file" "s3_msk_image_publisher" {
   type        = "zip"
   source_dir  = "../Source/Lambdas/MSK-Image-Publisher"
-  output_path = "../Source/Lambdas/MSK-Image-Publisher/msk-image-publisher.zip"
+  output_path = "../Source/Lambdas/msk-image-publisher.zip"
 }
 
 resource "aws_lambda_function" "s3_msk_image_publisher" {
