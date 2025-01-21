@@ -54,5 +54,5 @@ resource "aws_lambda_permission" "allow_s3_invoke" {
 }
 
 output "broker_list" {
-  value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_tls
+  value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers
 }
