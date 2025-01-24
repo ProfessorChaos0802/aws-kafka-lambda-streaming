@@ -41,9 +41,15 @@ resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
           "kafka:DescribeCluster",
           "kafka:ListTopics",
           "kafka:WriteData",
+          "kafka:ReadData",
           "kafka:DescribeTopic"
         ],
         Resource = aws_msk_cluster.msk_lambda_streaming_cluster.arn
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "sts.AssumeRole",
+        "Resource" : "arn:aws:iam::${var.account_id}:role/s3_msk_image_publisher_role"
       }
     ]
   })

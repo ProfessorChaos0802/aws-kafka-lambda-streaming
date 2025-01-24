@@ -23,12 +23,15 @@ exports.handler = async (event, context) =>{
             await credentials.getPromise();
 
             return {
-                user: credentials.accessKeyId,
-                pwd: credentials.secretAccessKey
+                username: credentials.accessKeyId,
+                password: credentials.secretAccessKey,
+                sessionToken: credentials.sessionToken
             }
         }
     },
     });
+
+    console.log(kafka.brokers);
 
     const producer = kafka.producer();
     await producer.connect();
