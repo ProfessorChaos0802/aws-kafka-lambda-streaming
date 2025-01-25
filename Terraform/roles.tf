@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
       },
       {
         "Effect" : "Allow",
-        "Action" : "sts.AssumeRole",
+        "Action" : "sts:AssumeRole",
         "Resource" : "arn:aws:iam::${var.account_id}:role/s3_msk_image_publisher_role"
       }
     ]
