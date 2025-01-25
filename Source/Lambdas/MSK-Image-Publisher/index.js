@@ -1,6 +1,5 @@
 const { Kafka } = require('kafkajs');
-const AWS = require('aws-sdk');
-const { fromNodeProviderChain, defaultProvider } = require('@aws-sdk/credential-providers');
+const { generateAuthToken } = require('aws-msk-iam-sasl-signer-js');
 
 exports.handler = async (event, context) =>{
     const region = process.env.AWS_REGION;
@@ -11,14 +10,12 @@ exports.handler = async (event, context) =>{
     brokers: process.env.MSK_BROKER_LIST.split(','),
     ssl: true,
     sasl: {
-            mechanism: 'aws',
-            authenticationProvider: async() => {
-                const credentials = await fromNodeProviderChain()();
+            mechanism: 'oauthbearer',
+            oauthBearerProvider: async () => {
+                const authTokenResponse = await generateAuthToken(region);
 
                 return {
-                    user: credentials.accessKeyId,
-                    password: credentials.secretAccessKey,
-                    sessionToken: credentials.sessionToken
+                    value: authTokenResponse.token
                 }
             }
         }
