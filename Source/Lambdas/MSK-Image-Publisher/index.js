@@ -13,7 +13,7 @@ exports.handler = async (event, context) =>{
     sasl: {
             mechanism: 'aws',
             authenticationProvider: async() => {
-                const credentials = await fromNodeProviderChain();
+                const credentials = await fromNodeProviderChain()();
 
                 return {
                     user: credentials.accessKeyId,
