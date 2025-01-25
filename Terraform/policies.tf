@@ -1,4 +1,4 @@
-resource "aws_msk_cluster_policy" "example" {
+resource "aws_msk_cluster_policy" "msk_lambda_streaming_cluster_policy" {
   cluster_arn = aws_msk_cluster.msk_lambda_streaming_cluster.arn
 
   policy = jsonencode({
