@@ -3,6 +3,7 @@ const { fromNodeProviderChain } = require('@aws-sdk/credential-providers');
 const { Kafka } = require('kafkajs');
 
 exports.handler = async (event, context) =>{
+    console.log(`MSK Broker List: ${process.env.MSK_BROKER_LIST}`)
     const kafka = new Kafka({
     clientId: 's3-msk-image-publisher',
     brokers: process.env.MSK_BROKER_LIST.split(','),
@@ -22,7 +23,7 @@ exports.handler = async (event, context) =>{
     const credentials = fromNodeProviderChain({ process.env.AWS_REGION });
     kafka.sasl.password = async () => {
         const { accessKeyId, secretAccessKey, sessionToken } = await credentials();
-        
+
         return `AWS_ACCESS_KEY_ID=${accessKeyId},AWS_SECRET_ACCESS_KEY=${secretAccessKey},AWS_SESSION_TOKEN=${sessionToken}`;
     };
 
