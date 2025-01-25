@@ -36,6 +36,7 @@ resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
         Action = [
           "kafka:CreateTopic",
           "kafka:Connect",
+          "kafka:DescribeCluster",
           "kafka:DescribeClusterOperation",
           "kafka:GetBootstrapBrokers",
           "kafka:DescribeCluster",
