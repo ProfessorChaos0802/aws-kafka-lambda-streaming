@@ -1,37 +1,30 @@
 const AWS = require('aws-sdk');
+const { fromNodeProviderChain } = require('@aws-sdk/credential-providers');
 const { Kafka } = require('kafkajs');
 
 exports.handler = async (event, context) =>{
     const kafka = new Kafka({
     clientId: 's3-msk-image-publisher',
-    brokers: [
-        process.env.MSK_BROKER_LIST.split(',')
-    ],
-    ssl: {
-        rejectUnauthorized: true
-    },
+    brokers: process.env.MSK_BROKER_LIST.split(','),
+    ssl: true,
     sasl: {
-        mechanism: 'AWS_MSK_IAM',
-        authProvider: async () => {
-            const credentials = new AWS.ChainableTemporaryCredentials({
-                params: {
-                    RoleArn: process.env.MSK_IMAGE_PUB_ROLE_ARN,
-                    RoleSessionName: 'MSKImagePublisher'
-                }
-            });
-
-            await credentials.getPromise();
-
-            return {
-                username: credentials.accessKeyId,
-                password: credentials.secretAccessKey,
-                sessionToken: credentials.sessionToken
-            }
-        }
+        mechanism: 'aws',
+        authorizationIdentidy: '',
+        username: '',
+        password: ''
     },
+    connectionTimeout: 10000,
+    requestTimeout: 10000
     });
 
     console.log(kafka.brokers);
+
+    const credentials = fromNodeProviderChain({ process.env.AWS_REGION });
+    kafka.sasl.password = async () => {
+        const { accessKeyId, secretAccessKey, sessionToken } = await credentials();
+        
+        return `AWS_ACCESS_KEY_ID=${accessKeyId},AWS_SECRET_ACCESS_KEY=${secretAccessKey},AWS_SESSION_TOKEN=${sessionToken}`;
+    };
 
     const producer = kafka.producer();
     await producer.connect();
