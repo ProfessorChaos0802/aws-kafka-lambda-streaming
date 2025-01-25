@@ -15,7 +15,7 @@ resource "aws_msk_cluster_policy" "msk_lambda_streaming_cluster_policy" {
         "kafka:CreateVpcConnection",
         "kafka:GetBootstrapBrokers",
       ]
-      Resource = "arn:aws:kafka:us-east-2:048908104884:cluster/mskLambdaStreamingCluster/*"
+      Resource = aws_msk_cluster.msk_lambda_streaming_cluster.arn
     }]
   })
 }
