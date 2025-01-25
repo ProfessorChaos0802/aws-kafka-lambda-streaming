@@ -2,7 +2,7 @@ const { Kafka } = require('kafkajs');
 const { generateAuthToken } = require('aws-msk-iam-sasl-signer-js');
 
 exports.handler = async (event, context) =>{
-    const region = process.env.AWS_REGION;
+    const region = process.env.AUTH_REGION;
 
     console.log(`MSK Broker List: ${process.env.MSK_BROKER_LIST}`);
     const kafka = new Kafka({
@@ -12,7 +12,11 @@ exports.handler = async (event, context) =>{
     sasl: {
             mechanism: 'oauthbearer',
             oauthBearerProvider: async () => {
-                const authTokenResponse = await generateAuthToken(region);
+                const authTokenResponse = await generateAuthToken({
+                    region: region,
+                    awsRoleArn: process.env.MSK_IMAGE_PUB_ROLE_ARN,
+                    awsRoleSessionName: "MSKImagePublisher"
+                });
 
                 return {
                     value: authTokenResponse.token
