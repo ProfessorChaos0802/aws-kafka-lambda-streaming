@@ -23,8 +23,8 @@ resource "aws_security_group_rule" "msk_sg_ingress" {
   security_group_id = aws_security_group.msk_sg.id
   cidr_blocks       = [var.lambda_subnet_cidr]
   description       = "AWS MSK Lambda Streaming MSK Ingress Rule"
-  from_port         = 0
-  to_port           = 65535
+  from_port         = 9098
+  to_port           = 9098
   protocol          = "tcp"
 }
 
@@ -43,8 +43,8 @@ resource "aws_security_group_rule" "lambda_sg_egress_to_msk" {
   security_group_id = aws_security_group.lambda_sg.id
   cidr_blocks       = [var.vpc_cidr] # Ensures traffic goes to MSK SG
   description       = "Allow Lambda to connect to MSK brokers"
-  from_port         = 0
-  to_port           = 65535
+  from_port         = 9098
+  to_port           = 9098
   protocol          = "tcp"
 }
 

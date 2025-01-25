@@ -1,5 +1,6 @@
 const { fromNodeProviderChain } = require('@aws-sdk/credential-providers');
 const { Kafka } = require('kafkajs');
+const AWS = require('aws-sdk');
 
 exports.handler = async (event, context) =>{
     const region = process.env.AWS_REGION;
@@ -11,22 +12,34 @@ exports.handler = async (event, context) =>{
     ssl: true,
     sasl: {
         mechanism: 'aws',
-        authorizationIdentidy: '',
-        username: '',
-        password: ''
+        authenticationProvider: async () => {
+            const credentials = new AWS.ChainableTemporaryCredentials({
+              params: {
+                RoleArn: process.env.MSK_IMAGE_PUB_ROLE_ARN,
+                RoleSessionName: 'MSKImagePublisher',
+              },
+            });
+  
+            // Wait for credentials to resolve
+            await credentials.getPromise();
+  
+            return {
+              user: credentials.accessKeyId,
+              password: credentials.secretAccessKey, // Correctly assign the property
+              sessionToken: credentials.sessionToken, // Include sessionToken for temporary credentials
+            };
+          },
     },
     connectionTimeout: 10000,
     requestTimeout: 10000
     });
 
-    console.log(kafka.brokers);
+    // const credentials = fromNodeProviderChain({ region });
+    // kafka.sasl.password = async () => {
+    //     const { accessKeyId, secretAccessKey, sessionToken } = await credentials();
 
-    const credentials = fromNodeProviderChain({ region });
-    kafka.sasl.password = async () => {
-        const { accessKeyId, secretAccessKey, sessionToken } = await credentials();
-
-        return `AWS_ACCESS_KEY_ID=${accessKeyId},AWS_SECRET_ACCESS_KEY=${secretAccessKey},AWS_SESSION_TOKEN=${sessionToken}`;
-    };
+    //     return `AWS_ACCESS_KEY_ID=${accessKeyId},AWS_SECRET_ACCESS_KEY=${secretAccessKey},AWS_SESSION_TOKEN=${sessionToken}`;
+    // };
 
     const producer = kafka.producer();
     await producer.connect();
