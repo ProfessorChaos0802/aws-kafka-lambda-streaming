@@ -4,7 +4,7 @@ resource "aws_msk_cluster_policy" "example" {
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
-      Sid    = "msk-lambda-streaming-cluster-policy"
+      Sid    = "AllowIAMBasedAccess"
       Effect = "Allow"
       Principal = {
         "AWS" = aws_iam_role.s3_msk_image_publisher_role.arn
