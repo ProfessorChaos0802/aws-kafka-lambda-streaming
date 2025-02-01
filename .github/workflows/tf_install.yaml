@@ -57,6 +57,12 @@ jobs:
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+    # Set up Python to be able to install python dependencies
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
     # Note if Manual Run
     - name: Manual Run
       if: ${{ inputs.manual_run == 'true' }}
@@ -72,7 +78,13 @@ jobs:
 
     # Install MSK-Image-Publisher Lambda Dependencies
     - name: Install MSK-Image-Publisher Lambda Dependencies
-      run: npm --prefix Source/Lambdas/MSK-Image-Publisher/ install
+      run: npm --prefix Source/Lambdas/MSK-Image-Publisher-Node/ install
+
+    # Install S3-Image-Publisher Python Lambda Dependencies
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r Source/Lambdas/MSK-Image-Publisher-Python/requirements.txt -t Source/Lambdas/MSK-Image-Publisher-Python
 
     # Validate Terraform
     - name: Terraform Validate

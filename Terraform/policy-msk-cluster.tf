@@ -7,7 +7,7 @@ resource "aws_msk_cluster_policy" "msk_lambda_streaming_cluster_policy" {
       Sid    = "AllowIAMBasedAccess"
       Effect = "Allow"
       Principal = {
-        "AWS" = aws_iam_role.s3_msk_image_publisher_role.arn
+        "AWS" = aws_iam_role.s3_image_msk_publisher_role.arn
       }
       Action = [
         "kafka:Describe*",

@@ -1,33 +1,3 @@
-resource "aws_security_group" "msk_sg" {
-  name_prefix = "msk_sg"
-  vpc_id      = var.vpc_id
-  tags = {
-    Name    = "AWS MSK Lambd Streaming MSK Security Group"
-    project = var.project
-    owner   = var.owner
-  }
-}
-
-resource "aws_security_group_rule" "msk_sg_egress" {
-  type              = "egress"
-  security_group_id = aws_security_group.msk_sg.id
-  cidr_blocks       = [var.all_traffic]
-  description       = "AWS MSK Lambda Streaming MSK Egress Rule"
-  from_port         = 0
-  to_port           = 65535
-  protocol          = "tcp"
-}
-
-resource "aws_security_group_rule" "msk_sg_ingress" {
-  type              = "ingress"
-  security_group_id = aws_security_group.msk_sg.id
-  cidr_blocks       = [var.lambda_subnet_cidr]
-  description       = "AWS MSK Lambda Streaming MSK Ingress Rule"
-  from_port         = 9098
-  to_port           = 9098
-  protocol          = "tcp"
-}
-
 resource "aws_security_group" "lambda_sg" {
   name_prefix = "lambda_sg"
   vpc_id      = var.vpc_id

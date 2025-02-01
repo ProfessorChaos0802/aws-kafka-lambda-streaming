@@ -1,18 +1,18 @@
-data "archive_file" "s3_msk_image_publisher" {
+data "archive_file" "s3_image_publisher_python" {
   type        = "zip"
-  source_dir  = "../Source/Lambdas/MSK-Image-Publisher"
-  output_path = "../Source/Lambdas/msk-image-publisher.zip"
+  source_dir  = "../Source/Lambdas/MSK-Image-Publisher-Python"
+  output_path = "../Source/Lambdas/msk-image-publisher-python.zip"
 }
 
-resource "aws_lambda_function" "s3_msk_image_publisher" {
-  function_name    = "s3_msk_image_publisher"
-  runtime          = "nodejs18.x"
-  role             = aws_iam_role.s3_msk_image_publisher_role.arn
-  handler          = "index.handler"
+resource "aws_lambda_function" "s3_image_publisher_python" {
+  function_name    = "s3_image_publisher_python"
+  runtime          = "python3.9"
+  role             = aws_iam_role.s3_image_msk_publisher_role.arn
+  handler          = "imagePublisher.lambda_handler"
   timeout          = 30
   memory_size      = 128
-  filename         = data.archive_file.s3_msk_image_publisher.output_path
-  source_code_hash = data.archive_file.s3_msk_image_publisher.output_base64sha256
+  filename         = data.archive_file.s3_image_publisher_python.output_path
+  source_code_hash = data.archive_file.s3_image_publisher_python.output_base64sha256
 
   # VPC Configuration
   vpc_config {
@@ -29,9 +29,9 @@ resource "aws_lambda_function" "s3_msk_image_publisher" {
   environment {
     variables = {
       AUTH_REGION            = var.region
-      MSK_TOPIC              = "${aws_s3_bucket.msk_image_bucket.id}-s3-image-streaming"
+      MSK_TOPIC              = "${aws_s3_bucket.msk_image_bucket.id}-s3-image-streaming-python"
       MSK_BROKER_LIST        = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
-      MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_msk_image_publisher_role.arn
+      MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_image_msk_publisher_role.arn
     }
   }
 
@@ -49,7 +49,7 @@ resource "aws_lambda_function" "s3_msk_image_publisher" {
 resource "aws_lambda_permission" "allow_s3_invoke" {
   statement_id  = "AllowS3Invoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.s3_msk_image_publisher.function_name
+  function_name = aws_lambda_function.s3_image_publisher_python.function_name
   principal     = "s3.amazonaws.com"
   source_arn    = aws_s3_bucket.msk_image_bucket.arn
 }
