@@ -2,7 +2,7 @@ import os
 import boto3
 import json
 import base64
-from kafak import KafkaProducer
+from kafka import KafkaProducer
 
 def get_iam_auth_token():
     """Generates an IAM authentication token for MSK."""
