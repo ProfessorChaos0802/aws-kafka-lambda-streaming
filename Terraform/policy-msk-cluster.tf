@@ -18,4 +18,6 @@ resource "aws_msk_cluster_policy" "msk_lambda_streaming_cluster_policy" {
       Resource = aws_msk_cluster.msk_lambda_streaming_cluster.arn
     }]
   })
+
+  depends_on = [aws_iam_role.s3_image_msk_publisher_role]
 }

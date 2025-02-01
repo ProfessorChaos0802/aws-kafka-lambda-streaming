@@ -19,6 +19,8 @@ resource "aws_s3_bucket_notification" "msk_image_bucket_notification_node" {
     filter_prefix       = ""
     filter_suffix       = ".jpg" # Only trigger on image uploads
   }
+
+  depends_on = [aws_lambda_function.s3_image_publisher_node]
 }
 
 resource "aws_s3_bucket_notification" "msk_image_bucket_notification_python" {
@@ -30,4 +32,6 @@ resource "aws_s3_bucket_notification" "msk_image_bucket_notification_python" {
     filter_prefix       = ""
     filter_suffix       = ".jpg" # Only trigger on image uploads
   }
+
+  depends_on = [aws_lambda_function.s3_image_publisher_python]
 }
