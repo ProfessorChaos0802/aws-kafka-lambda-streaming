@@ -9,8 +9,8 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
         Effect = "Allow",
         Principal = {
           Service = [
-            "lambda.amazonaws.com",  # Allow Lambda to assume the role
-            "kafka.amazonaws.com"    # Allow MSK service to interact with the role (if needed)
+            "lambda.amazonaws.com", # Allow Lambda to assume the role
+            "kafka.amazonaws.com"   # Allow MSK service to interact with the role (if needed)
           ]
         }
       }
@@ -35,8 +35,8 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
         },
         # S3 read-only access
         {
-          Effect = "Allow",
-          Action = "s3:GetObject",
+          Effect   = "Allow",
+          Action   = "s3:GetObject",
           Resource = "arn:aws:s3:::*/*"
         },
         # MSK (Kafka) specific access
@@ -59,8 +59,8 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
 
         # Allow assume role (for the Lambda to get MSK authentication token)
         {
-          Effect = "Allow",
-          Action = "sts:AssumeRole",
+          Effect   = "Allow",
+          Action   = "sts:AssumeRole",
           Resource = "arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"
         }
       ]
@@ -69,37 +69,37 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
 
   # Labda Execution Policy
   inline_policy {
-    name= "lambda_basic_execution_policy"
-    policy ="arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+    name   = "lambda_basic_execution_policy"
+    policy = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
   }
 
   # S3 Read Only Policy
   inline_policy {
-    name= "s3_read_only_access_policy"
+    name   = "s3_read_only_access_policy"
     policy = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
   }
 
   # VPC Policy
   inline_policy {
-    name="lambda-vpc-policy"
+    name = "lambda-vpc-policy"
     policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
+      Version = "2012-10-17"
+      Statement = [
         {
-            Effect = "Allow"
-            Action = [
+          Effect = "Allow"
+          Action = [
             "ec2:CreateNetworkInterface",
             "ec2:DescribeNetworkInterfaces",
             "ec2:DeleteNetworkInterface"
-            ]
-            Resource = "*"
+          ]
+          Resource = "*"
         },
         {
-            Effect   = "Allow"
-            Action   = "logs:*"
-            Resource = "*"
+          Effect   = "Allow"
+          Action   = "logs:*"
+          Resource = "*"
         }
-        ]
+      ]
     })
   }
 }

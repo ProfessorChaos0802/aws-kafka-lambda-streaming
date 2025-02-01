@@ -1,10 +1,10 @@
 # Files
 **/.terraform.lock.hcl
-Source/Lambda/MSK-Image-Publisher-Python/six.py
+**/Source/Lambda/MSK-Image-Publisher-Python/six.py
 
 # Directories
 .vscode
 **/.terraform/
 **/coverage/
 **/node_modules/
-Source/Lambda/MSK-Image-Publisher-Python/*/
+**/Source/Lambda/MSK-Image-Publisher-Python/*/

@@ -61,3 +61,7 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
     owner   = var.owner
   }
 }
+
+output "broker_list" {
+  value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
+}
