@@ -22,7 +22,7 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
 
 resource "aws_iam_role_policy_attachment" "lambda_msk_publisher_policy" {
   role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = aws_iam_policy.lambda_msk_publisher_policy.arn
+  policy_arn = aws_iam_role_policy.lambda_msk_publisher_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy" {
@@ -37,7 +37,7 @@ resource "aws_iam_role_policy_attachment" "s3_read_only_access_policy" {
 
 resource "aws_iam_role_policy_attachment" "lambda_vpc_policy" {
   role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = aws_iam_policy.lambda_vpc_policy.arn
+  policy_arn = aws_iam_role_policy.lambda_vpc_policy.arn
 }
 
 #--------------------Role Policy Resources---------------------
