@@ -18,42 +18,6 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
   })
 }
 
-#--------------------Role Policy Attachments---------------------
-
-resource "aws_iam_role_policy_attachment" "lambda_msk_publisher_policy" {
-  role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = aws_iam_role_policy.lambda_msk_publisher_policy.arn
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy" {
-  role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
-resource "aws_iam_role_policy_attachment" "s3_read_only_access_policy" {
-  role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_vpc_policy" {
-  role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = aws_iam_role_policy.lambda_vpc_policy.arn
-}
-
-#--------------------Role Policy Resources---------------------
-
-resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
-  name   = "lambda_msk_publisher_policy"
-  role   = aws_iam_role.s3_image_msk_publisher_role.id
-  policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
-}
-
-resource "aws_iam_role_policy" "lambda_vpc_policy" {
-  name   = "lambda-vpc-policy"
-  role   = aws_iam_role.s3_msk_image_publisher_role.id
-  policy = data.aws_iam_policy_document.lambda_vpc_policy.json
-}
-
 #--------------------Policy Documents---------------------
 
 data "aws_iam_policy_document" "lambda_msk_publisher_policy" {
@@ -116,4 +80,32 @@ data "aws_iam_policy_document" "lambda_vpc_policy" {
     resources = ["*"]
   }
 }
+
+#--------------------Role Policy Resources---------------------
+
+resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
+  name   = "lambda_msk_publisher_policy"
+  role   = aws_iam_role.s3_image_msk_publisher_role.id
+  policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
+}
+
+resource "aws_iam_role_policy" "lambda_vpc_policy" {
+  name   = "lambda-vpc-policy"
+  role   = aws_iam_role.s3_image_msk_publisher_role.id
+  policy = data.aws_iam_policy_document.lambda_vpc_policy.json
+}
+
+#--------------------Role Policy Attachments---------------------
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "s3_read_only_access_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+
 
