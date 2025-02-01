@@ -16,91 +16,104 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
       }
     ]
   })
+}
 
-  # Lambda MSK Publisher Policy
-  inline_policy {
-    name = "lambda-msk-publisher-policy"
-    policy = jsonencode({
-      Version = "2012-10-17",
-      Statement = [
-        # Lambda basic execution role
-        {
-          Effect = "Allow",
-          Action = [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ],
-          Resource = "arn:aws:logs:*:*:*"
-        },
-        # S3 read-only access
-        {
-          Effect   = "Allow",
-          Action   = "s3:GetObject",
-          Resource = "arn:aws:s3:::*/*"
-        },
-        # MSK (Kafka) specific access
-        {
-          Effect = "Allow",
-          Action = [
-            "kafka:CreateTopic",
-            "kafka:Connect",
-            "kafka:DescribeCluster",
-            "kafka:DescribeClusterOperation",
-            "kafka:GetBootstrapBrokers",
-            "kafka:DescribeCluster",
-            "kafka:ListTopics",
-            "kafka:WriteData",
-            "kafka:ReadData",
-            "kafka:DescribeTopic"
-          ],
-          Resource = aws_msk_cluster.msk_lambda_streaming_cluster.arn
-        },
+#--------------------Role Policy Attachments---------------------
 
-        # Allow assume role (for the Lambda to get MSK authentication token)
-        {
-          Effect   = "Allow",
-          Action   = "sts:AssumeRole",
-          Resource = "arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"
-        }
-      ]
-    })
+resource "aws_iam_role_policy_attachment" "lambda_msk_publisher_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = aws_iam_policy.lambda_msk_publisher_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "s3_read_only_access_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_vpc_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = aws_iam_policy.lambda_vpc_policy.arn
+}
+
+#--------------------Role Policy Resources---------------------
+
+resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
+  name   = "lambda_msk_publisher_policy"
+  role   = aws_iam_role.s3_image_msk_publisher_role.id
+  policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
+}
+
+resource "aws_iam_role_policy" "lambda_vpc_policy" {
+  name   = "lambda-vpc-policy"
+  role   = aws_iam_role.s3_msk_image_publisher_role.id
+  policy = data.aws_iam_policy_document.lambda_vpc_policy.json
+}
+
+#--------------------Policy Documents---------------------
+
+data "aws_iam_policy_document" "lambda_msk_publisher_policy" {
+  # Cloudwatch Permissions
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:*:*:*"]
   }
 
-  # Labda Execution Policy
-  inline_policy {
-    name   = "lambda_basic_execution_policy"
-    policy = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  # S3 Permissions
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = ["arn:aws:s3:::*/*"]
   }
 
-  # S3 Read Only Policy
-  inline_policy {
-    name   = "s3_read_only_access_policy"
-    policy = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  # MSK Permissions
+  statement {
+    actions = [
+      "kafka:CreateTopic",
+      "kafka:Connect",
+      "kafka:DescribeCluster",
+      "kafka:DescribeClusterOperation",
+      "kafka:GetBootstrapBrokers",
+      "kafka:DescribeCluster",
+      "kafka:ListTopics",
+      "kafka:WriteData",
+      "kafka:ReadData",
+      "kafka:DescribeTopic"
+    ]
+    resources = [aws_msk_cluster.msk_lambda_streaming_cluster.arn]
   }
 
-  # VPC Policy
-  inline_policy {
-    name = "lambda-vpc-policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = [
-            "ec2:CreateNetworkInterface",
-            "ec2:DescribeNetworkInterfaces",
-            "ec2:DeleteNetworkInterface"
-          ]
-          Resource = "*"
-        },
-        {
-          Effect   = "Allow"
-          Action   = "logs:*"
-          Resource = "*"
-        }
-      ]
-    })
+  # Allow assume role (for the Lambda to get MSK authentication token)
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+    resources = ["arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"]
+  }
+}
+
+data "aws_iam_policy_document" "lambda_vpc_policy" {
+  statement {
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    actions   = ["logs:*"]
+    resources = ["*"]
   }
 }
 
