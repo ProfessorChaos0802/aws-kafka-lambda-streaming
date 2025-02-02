@@ -5,29 +5,23 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = [
-          "sts:AssumeRole",
-          "s3:GetObject",
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "kafka:CreateTopic",
-          "kafka:Connect",
-          "kafka:DescribeCluster",
-          "kafka:DescribeClusterOperation",
-          "kafka:GetBootstrapBrokers",
-          "kafka:DescribeCluster",
-          "kafka:ListTopics",
-          "kafka:WriteData",
-          "kafka:ReadData",
-          "kafka:DescribeTopic"
-        ],
-        Resource = [
-          "arn:aws:logs:*:*:*",
-          "arn:aws:s3:::*/*",
-          aws_msk_cluster.msk_lambda_streaming_cluster.arn,
-          "arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"
-        ],
+        Action = "sts:AssumeRole", # [
+        #   "sts:AssumeRole",
+        #   "s3:GetObject",
+        #   "logs:CreateLogGroup",
+        #   "logs:CreateLogStream",
+        #   "logs:PutLogEvents",
+        #   "kafka:CreateTopic",
+        #   "kafka:Connect",
+        #   "kafka:DescribeCluster",
+        #   "kafka:DescribeClusterOperation",
+        #   "kafka:GetBootstrapBrokers",
+        #   "kafka:DescribeCluster",
+        #   "kafka:ListTopics",
+        #   "kafka:WriteData",
+        #   "kafka:ReadData",
+        #   "kafka:DescribeTopic"
+        # ],
         Effect = "Allow",
         Principal = {
           Service = [
@@ -42,50 +36,50 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
 
 #--------------------Policy Documents---------------------
 
-# data "aws_iam_policy_document" "lambda_msk_publisher_policy" {
-#   # Cloudwatch Permissions
-#   statement {
-#     actions = [
-#       "logs:CreateLogGroup",
-#       "logs:CreateLogStream",
-#       "logs:PutLogEvents"
-#     ]
-#     resources = ["arn:aws:logs:*:*:*"]
-#   }
+data "aws_iam_policy_document" "lambda_msk_publisher_policy" {
+  # Cloudwatch Permissions
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:*:*:*"]
+  }
 
-#   # S3 Permissions
-#   statement {
-#     actions = [
-#       "s3:GetObject"
-#     ]
-#     resources = ["arn:aws:s3:::*/*"]
-#   }
+  # S3 Permissions
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+    resources = ["arn:aws:s3:::*/*"]
+  }
 
-#   # MSK Permissions
-#   statement {
-#     actions = [
-#       "kafka:CreateTopic",
-#       "kafka:Connect",
-#       "kafka:DescribeCluster",
-#       "kafka:DescribeClusterOperation",
-#       "kafka:GetBootstrapBrokers",
-#       "kafka:DescribeCluster",
-#       "kafka:ListTopics",
-#       "kafka:WriteData",
-#       "kafka:ReadData",
-#       "kafka:DescribeTopic"
-#     ]
-#     resources = [aws_msk_cluster.msk_lambda_streaming_cluster.arn]
-#   }
+  # MSK Permissions
+  statement {
+    actions = [
+      "kafka:CreateTopic",
+      "kafka:Connect",
+      "kafka:DescribeCluster",
+      "kafka:DescribeClusterOperation",
+      "kafka:GetBootstrapBrokers",
+      "kafka:DescribeCluster",
+      "kafka:ListTopics",
+      "kafka:WriteData",
+      "kafka:ReadData",
+      "kafka:DescribeTopic"
+    ]
+    resources = [aws_msk_cluster.msk_lambda_streaming_cluster.arn]
+  }
 
-#   # Allow assume role (for the Lambda to get MSK authentication token)
-#   statement {
-#     actions = [
-#       "sts:AssumeRole"
-#     ]
-#     resources = ["arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"]
-#   }
-# }
+  # Allow assume role (for the Lambda to get MSK authentication token)
+  statement {
+    actions = [
+      "sts:AssumeRole"
+    ]
+    resources = ["arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"]
+  }
+}
 
 data "aws_iam_policy_document" "lambda_vpc_policy" {
   statement {
@@ -105,11 +99,11 @@ data "aws_iam_policy_document" "lambda_vpc_policy" {
 
 #--------------------Role Policy Resources---------------------
 
-# resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
-#   name   = "lambda_msk_publisher_policy"
-#   role   = aws_iam_role.s3_image_msk_publisher_role.id
-#   policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
-# }
+resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
+  name   = "lambda_msk_publisher_policy"
+  role   = aws_iam_role.s3_image_msk_publisher_role.id
+  policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
+}
 
 resource "aws_iam_role_policy" "lambda_vpc_policy" {
   name   = "lambda-vpc-policy"
