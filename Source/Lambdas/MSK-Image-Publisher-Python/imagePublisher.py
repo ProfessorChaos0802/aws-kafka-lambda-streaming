@@ -6,9 +6,11 @@ from kafka import KafkaProducer
 
 def get_iam_auth_token():
     """Generates an IAM authentication token for MSK."""
-    sts_client = boto3.client('sts', region_name=os.getenv("AUTH_REGION"))
-
     role_arn = os.getenv("MSK_IMAGE_PUB_ROLE_ARN")
+    region = os.getenv("AUTH_REGION")
+
+    sts_client = boto3.client('sts', region_name=region, endpoint_url=f"https://sts.{region}.amazonaws.com")
+
     token = sts_client.assume_role(RoleArn=role_arn, RoleSessionName="MSKSession")
 
     credentials = token['Credentials']
