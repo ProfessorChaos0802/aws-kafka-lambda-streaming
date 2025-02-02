@@ -18,6 +18,15 @@ resource "aws_security_group_rule" "lambda_sg_egress_to_msk" {
   protocol          = "tcp"
 }
 
+resource "aws_security_group_rule" "lambda_sg_egress_allows_sts_traffic" {
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = [var.all_traffic]
+  security_group_id = aws_security_group.lambda_sg.id
+}
+
 resource "aws_security_group_rule" "lambda_sg_ingress_from_msk" {
   type              = "ingress"
   security_group_id = aws_security_group.lambda_sg.id
