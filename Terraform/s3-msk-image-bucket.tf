@@ -10,18 +10,18 @@ resource "aws_s3_bucket" "msk_image_bucket" {
   }
 }
 
-resource "aws_s3_bucket_notification" "msk_image_bucket_notification_node" {
-  bucket = aws_s3_bucket.msk_image_bucket.id
+# resource "aws_s3_bucket_notification" "msk_image_bucket_notification_node" {
+#   bucket = aws_s3_bucket.msk_image_bucket.id
 
-  lambda_function {
-    lambda_function_arn = aws_lambda_function.s3_image_publisher_node.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_prefix       = ""
-    filter_suffix       = ".jpg" # Only trigger on image uploads
-  }
+#   lambda_function {
+#     lambda_function_arn = aws_lambda_function.s3_image_publisher_node.arn
+#     events              = ["s3:ObjectCreated:*"]
+#     filter_prefix       = ""
+#     filter_suffix       = ".jpg" # Only trigger on image uploads
+#   }
 
-  depends_on = [aws_lambda_function.s3_image_publisher_node]
-}
+#   depends_on = [aws_lambda_function.s3_image_publisher_node]
+# }
 
 resource "aws_s3_bucket_notification" "msk_image_bucket_notification_python" {
   bucket = aws_s3_bucket.msk_image_bucket.id
