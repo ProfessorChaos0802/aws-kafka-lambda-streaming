@@ -45,11 +45,13 @@ resource "aws_lambda_function" "s3_image_publisher_node" {
   ]
 }
 
+# A single event can only notify a single Lambda function. Uncomment here and comment out in python lambda to enable
+
 # Lambda Permission for S3 to Invoke
-resource "aws_lambda_permission" "allow_s3_invoke_node" {
-  statement_id  = "AllowS3Invoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.s3_image_publisher_node.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.msk_image_bucket.arn
-}
+# resource "aws_lambda_permission" "allow_s3_invoke_node" {
+#   statement_id  = "AllowS3Invoke"
+#   action        = "lambda:InvokeFunction"
+#   function_name = aws_lambda_function.s3_image_publisher_node.function_name
+#   principal     = "s3.amazonaws.com"
+#   source_arn    = aws_s3_bucket.msk_image_bucket.arn
+# }
