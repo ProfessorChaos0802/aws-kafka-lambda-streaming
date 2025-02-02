@@ -5,7 +5,7 @@ data "archive_file" "s3_image_publisher_node" {
 }
 
 resource "aws_lambda_function" "s3_image_publisher_node" {
-  function_name    = "s3_msk_image_publisher"
+  function_name    = "s3_msk_image_publisher_node"
   runtime          = "nodejs18.x"
   role             = aws_iam_role.s3_image_msk_publisher_role.arn
   handler          = "index.handler"
