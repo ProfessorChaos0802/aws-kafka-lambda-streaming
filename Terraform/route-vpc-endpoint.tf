@@ -3,5 +3,5 @@ resource "aws_route" "sts_route" {
   destination_cidr_block = var.vpc_cidr
   vpc_endpoint_id        = aws_vpc_endpoint.sts.id
 
-  depends_on = [ aws_vpc_endpoint.sts ]
+  depends_on = [aws_vpc_endpoint.sts]
 }
