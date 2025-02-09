@@ -5,23 +5,7 @@ resource "aws_iam_role" "s3_image_msk_publisher_role" {
     Version = "2012-10-17",
     Statement = [
       {
-        Action = "sts:AssumeRole", # [
-        #   "sts:AssumeRole",
-        #   "s3:GetObject",
-        #   "logs:CreateLogGroup",
-        #   "logs:CreateLogStream",
-        #   "logs:PutLogEvents",
-        #   "kafka:CreateTopic",
-        #   "kafka:Connect",
-        #   "kafka:DescribeCluster",
-        #   "kafka:DescribeClusterOperation",
-        #   "kafka:GetBootstrapBrokers",
-        #   "kafka:DescribeCluster",
-        #   "kafka:ListTopics",
-        #   "kafka:WriteData",
-        #   "kafka:ReadData",
-        #   "kafka:DescribeTopic"
-        # ],
+        Action = "sts:AssumeRole",
         Effect = "Allow",
         Principal = {
           Service = [
@@ -100,28 +84,38 @@ data "aws_iam_policy_document" "lambda_vpc_policy" {
 
 #--------------------Role Policy Resources---------------------
 
-resource "aws_iam_role_policy" "lambda_msk_publisher_policy" {
+resource "aws_iam_policy" "lambda_msk_publisher_policy" {
   name   = "lambda_msk_publisher_policy"
-  role   = aws_iam_role.s3_image_msk_publisher_role.id
+  description   = "Lambda MSK Publisher Policy"
   policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
 }
 
-resource "aws_iam_role_policy" "lambda_vpc_policy" {
+resource "aws_iam_policy" "lambda_vpc_policy" {
   name   = "lambda-vpc-policy"
-  role   = aws_iam_role.s3_image_msk_publisher_role.id
+  description   = "Lambda VPC Policy"
   policy = data.aws_iam_policy_document.lambda_vpc_policy.json
 }
 
 #--------------------Role Policy Attachments---------------------
 
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution_policy" {
+resource "aws_iam_role_policy_attachment" "lambda_msk_execution_policy" {
   role       = aws_iam_role.s3_image_msk_publisher_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaMSKExecutionRole"
 }
 
 resource "aws_iam_role_policy_attachment" "s3_read_only_access_policy" {
   role       = aws_iam_role.s3_image_msk_publisher_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_msk_publisher_policy" {
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = aws_iam_policy.lambda_msk_publisher_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_vpc_policy" { 
+  role       = aws_iam_role.s3_image_msk_publisher_role.name
+  policy_arn = aws_iam_policy.lambda_vpc_policy.arn
 }
 
 
