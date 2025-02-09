@@ -61,7 +61,10 @@ data "aws_iam_policy_document" "lambda_msk_publisher_policy" {
     actions = [
       "sts:AssumeRole"
     ]
-    resources = ["arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role"]
+    resources = [
+      "arn:aws:iam::${var.account_id}:role/s3_image_msk_publisher_role",
+      "arn:aws:iam::${var.account_id}:assumed-role/s3_image_msk_publisher_role/s3_image-publisher_python"
+    ]
   }
 }
 
