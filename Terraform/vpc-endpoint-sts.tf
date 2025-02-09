@@ -12,9 +12,9 @@ resource "aws_vpc_endpoint" "sts" {
     aws_security_group.lambda_sg.id
   ]
 
-  route_table_ids = [
-    aws_route_table.msk_lambda_streaming_route_table.id
-  ]
+  # route_table_ids = [
+  #   aws_route_table.msk_lambda_streaming_route_table.id
+  # ]
 
   tags = {
     project = var.project
