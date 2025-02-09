@@ -85,15 +85,15 @@ data "aws_iam_policy_document" "lambda_vpc_policy" {
 #--------------------Role Policy Resources---------------------
 
 resource "aws_iam_policy" "lambda_msk_publisher_policy" {
-  name   = "lambda_msk_publisher_policy"
-  description   = "Lambda MSK Publisher Policy"
-  policy = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
+  name        = "lambda_msk_publisher_policy"
+  description = "Lambda MSK Publisher Policy"
+  policy      = data.aws_iam_policy_document.lambda_msk_publisher_policy.json
 }
 
 resource "aws_iam_policy" "lambda_vpc_policy" {
-  name   = "lambda-vpc-policy"
-  description   = "Lambda VPC Policy"
-  policy = data.aws_iam_policy_document.lambda_vpc_policy.json
+  name        = "lambda-vpc-policy"
+  description = "Lambda VPC Policy"
+  policy      = data.aws_iam_policy_document.lambda_vpc_policy.json
 }
 
 #--------------------Role Policy Attachments---------------------
@@ -113,7 +113,7 @@ resource "aws_iam_role_policy_attachment" "lambda_msk_publisher_policy" {
   policy_arn = aws_iam_policy.lambda_msk_publisher_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_vpc_policy" { 
+resource "aws_iam_role_policy_attachment" "lambda_vpc_policy" {
   role       = aws_iam_role.s3_image_msk_publisher_role.name
   policy_arn = aws_iam_policy.lambda_vpc_policy.arn
 }
