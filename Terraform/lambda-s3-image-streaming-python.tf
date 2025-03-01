@@ -7,7 +7,7 @@ data "archive_file" "s3_image_publisher_python" {
 resource "aws_lambda_function" "s3_image_publisher_python" {
   function_name    = "s3_image_publisher_python"
   runtime          = "python3.9"
-  role             = aws_iam_role.s3_image_msk_publisher_role.arn
+  role             = aws_iam_role.lambda_execution_role.arn
   handler          = "imagePublisher.lambda_handler"
   timeout          = 150
   memory_size      = 128
@@ -31,7 +31,7 @@ resource "aws_lambda_function" "s3_image_publisher_python" {
       AUTH_REGION            = var.region
       MSK_TOPIC              = "${aws_s3_bucket.msk_image_bucket.id}-s3-image-streaming-python"
       MSK_BROKER_LIST        = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
-      MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_image_msk_publisher_role.arn
+      MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_publish_msk_role.arn
     }
   }
 
