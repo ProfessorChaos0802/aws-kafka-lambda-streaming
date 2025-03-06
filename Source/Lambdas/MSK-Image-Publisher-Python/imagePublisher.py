@@ -55,8 +55,8 @@ def lambda_handler(event, context):
             'security.protocol': 'SASL_SSL',
             'sasl.mechanism': 'AWS_MSK_IAM',
             'sasl.username': access_key_id,
-            'sasl.password': secret_access_key,
-            'sasl.session.token': session_token
+            'sasl.password': secret_access_key
+            # 'sasl.session.token': session_token
         }
 
         # Create Kafka producer
