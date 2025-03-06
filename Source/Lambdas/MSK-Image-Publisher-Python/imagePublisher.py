@@ -54,9 +54,10 @@ def lambda_handler(event, context):
             'bootstrap.servers': kafka_brokers,
             'security.protocol': 'SASL_SSL',
             'sasl.mechanism': 'AWS_MSK_IAM',
-            'sasl.username': access_key_id,
-            'sasl.password': secret_access_key
-            # 'sasl.session.token': session_token
+            'sasl.aws.credentials.provider': 'default',
+            'sasl.aws.access.key': access_key_id,
+            'sasl.aws.secret.key': secret_access_key,
+            'sasl.aws.session.token': session_token
         }
 
         # Create Kafka producer
