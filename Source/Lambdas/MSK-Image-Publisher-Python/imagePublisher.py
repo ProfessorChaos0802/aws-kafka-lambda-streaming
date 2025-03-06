@@ -3,7 +3,7 @@ import boto3
 import base64
 import json
 import logging
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 
 # Initialize logging
 logger = logging.getLogger()
@@ -54,13 +54,13 @@ def lambda_handler(event, context):
             'bootstrap_servers': kafka_brokers,
             'security_protocol': 'SASL_SSL',
             'sasl_mechanism': 'AWS_MSK_IAM',
-            'sasl_iam_access_key_id': access_key_id,
-            'sasl_iam_secret_access_key': secret_access_key,
-            'sasl_iam_session_token': session_token
+            'sasl.username': access_key_id,
+            'sasl.password': secret_access_key,
+            'sasl.oauthbearer.token': session_token
         }
 
         # Create Kafka producer
-        producer = KafkaProducer(**conf)
+        producer = Producer(**conf)
 
         # Process S3 event records
         for record in event['Records']:
