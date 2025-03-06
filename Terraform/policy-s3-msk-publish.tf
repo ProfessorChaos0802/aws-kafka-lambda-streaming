@@ -48,7 +48,7 @@ data "aws_iam_policy_document" "s3_publish_msk_policy_document" {
       "sts:AssumeRole"
     ]
     resources = [
-      "arn:aws:iam::${var.account_id}:role/lambda_execution_role"
+      "arn:aws:iam::${var.account_id}:role/lambda_execution_role/*"
     ]
   }
 }
