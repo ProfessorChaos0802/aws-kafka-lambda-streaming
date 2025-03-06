@@ -53,7 +53,7 @@ def lambda_handler(event, context):
         conf = {
             'bootstrap.servers': kafka_brokers,
             'security.protocol': 'SASL_SSL',
-            'sasl_mechanism': 'AWS_MSK_IAM',
+            'sasl.mechanism': 'AWS_MSK_IAM',
             'sasl.username': access_key_id,
             'sasl.password': secret_access_key,
             'sasl.oauthbearer.token': session_token
