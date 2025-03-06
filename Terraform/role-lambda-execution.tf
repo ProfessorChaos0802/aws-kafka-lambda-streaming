@@ -8,7 +8,7 @@ resource "aws_iam_role" "lambda_execution_role" {
         Action = "sts:AssumeRole",
         Effect = "Allow",
         Principal = {
-          "AWS" : "arn:aws:iam::${var.account_id}:role/${aws_iam_role.lambda_execution_role.name}" # Adding trust policy for the given IAM role
+          Service = "lambda.amazonaws.com"
         }
       }
     ]
@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc_endpoint_policy_attachment
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_execution_policy_attachment" {
-  role       = aws_iam_role.lambda_execution_role
+  role       = aws_iam_role.lambda_execution_role.name
   policy_arn = aws_iam_policy.lambda_execution_policy.arn
 }
 

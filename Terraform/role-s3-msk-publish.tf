@@ -8,6 +8,7 @@ resource "aws_iam_role" "s3_publish_msk_role" {
         Action = "sts:AssumeRole",
         Effect = "Allow",
         Principal = {
+          AWS = "arn:aws:iam::${var.account_id}:role/${aws_iam_role.lambda_execution_role.name}",
           Service = [
             "lambda.amazonaws.com", # Allow Lambda to assume the role
             "kafka.amazonaws.com"   # Allow MSK service to interact with the role
