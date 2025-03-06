@@ -51,8 +51,8 @@ def lambda_handler(event, context):
 
         # Kafka Producer Configuration
         conf = {
-            'bootstrap_servers': kafka_brokers,
-            'security_protocol': 'SASL_SSL',
+            'bootstrap.servers': kafka_brokers,
+            'security.protocol': 'SASL_SSL',
             'sasl_mechanism': 'AWS_MSK_IAM',
             'sasl.username': access_key_id,
             'sasl.password': secret_access_key,
