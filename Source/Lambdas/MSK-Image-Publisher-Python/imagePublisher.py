@@ -60,6 +60,9 @@ def lambda_handler(event, context):
             'sasl_plain_password': password,
             'value_serializer': lambda v: json.dumps(v).encode('utf-8'),
             'key_serializer': lambda k: k.encode('utf-8'),
+            'request_timeout_ms': 10000,
+            'retries': 3,
+            'acks': 'all'
         }
 
         # Create Kafka producer
@@ -80,9 +83,14 @@ def lambda_handler(event, context):
 
             # Send the encoded file data to Kafka
             producer.send(topic, key=object_key, value={"image": encoded_data})
-            producer.flush()
 
             logger.info(f"Published {object_key} to Kafka topic {topic}")
+
+        producer.flush()
+        logger.info("All events published to Kafka")
+
+        # Close the Kafka producer
+        producer.close()
 
         return {
             "statusCode": 200,
