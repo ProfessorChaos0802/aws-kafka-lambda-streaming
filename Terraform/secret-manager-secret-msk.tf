@@ -1,5 +1,6 @@
 resource "aws_secretsmanager_secret" "msk_scram_secret" {
-  name = "AmazonMSK_SCRAM"
+  name       = "AmazonMSK_SCRAM"
+  kms_key_id = aws_kms_key.msk_credentials_key.arn
 }
 
 resource "aws_secretsmanager_secret_version" "msk_scram_secret_value" {
