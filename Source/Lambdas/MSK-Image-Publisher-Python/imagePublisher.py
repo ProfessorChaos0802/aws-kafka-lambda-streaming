@@ -55,7 +55,7 @@ def lambda_handler(event, context):
         conf = {
             'bootstrap_servers': kafka_brokers,
             'security_protocol': 'SASL_SSL',
-            'sasl_mechanism': 'SCRAM_SHA_512',
+            'sasl_mechanism': 'SCRAM-SHA-512',
             'sasl_plain_username': user,
             'sasl_plain_password': password,
             'value_serializer': lambda v: json.dumps(v).encode('utf-8'),
