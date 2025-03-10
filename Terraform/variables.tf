@@ -81,3 +81,17 @@ variable "subnet_c_cidr" {
   nullable    = false
   default     = "10.0.2.48/28"
 }
+
+variable "msk_user" {
+  description = "MSK Username for SASL/SCRAM authentication"
+  type        = string
+  nullable    = false
+  default     = "user"
+}
+
+variable "msk_password" {
+  description = "MSK Password for SASL/SCRAM authentication"
+  type        = string
+  nullable    = false
+  default     = "password"
+}
