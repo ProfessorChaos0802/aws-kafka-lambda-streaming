@@ -32,6 +32,8 @@ resource "aws_lambda_function" "s3_image_publisher_python" {
       MSK_TOPIC              = "${aws_s3_bucket.msk_image_bucket.id}-s3-image-streaming-python"
       MSK_BROKER_LIST        = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
       MSK_IMAGE_PUB_ROLE_ARN = aws_iam_role.s3_publish_msk_role.arn
+      MSK_USER               = var.msk_user
+      MSK_PWD                = var.msk_password
     }
   }
 

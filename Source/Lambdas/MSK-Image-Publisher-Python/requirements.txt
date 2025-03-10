@@ -1,2 +1,2 @@
 boto3
-confluent-kafka==1.9.2
+kafka-python

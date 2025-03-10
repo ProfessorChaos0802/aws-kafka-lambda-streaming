@@ -17,18 +17,7 @@ resource "aws_msk_cluster_policy" "msk_lambda_streaming_cluster_policy" {
           "kafka:GetBootstrapBrokers",
         ]
         Resource = aws_msk_cluster.msk_lambda_streaming_cluster.arn
-      },
-      # {
-      #   Sid    = "AllowSecretsManagerBasedAccess"
-      #   Effect = "Allow"
-      #   Principal = {
-      #     "Service" = "kafka.amazonaws.com"
-      #   }
-      #   Action = [
-      #     "secretsmanager:GetSecretValue",
-      #   ]
-      #   Resource = aws_secretsmanager_secret.msk_scram_secret.arn
-      # }
+      }
     ]
   })
 

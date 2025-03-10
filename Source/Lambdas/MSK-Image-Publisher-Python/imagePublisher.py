@@ -3,7 +3,7 @@ import boto3
 import base64
 import json
 import logging
-from confluent_kafka import Producer
+from kafka import KafkaProducer
 
 # Initialize logging
 logger = logging.getLogger()
@@ -40,28 +40,30 @@ def lambda_handler(event, context):
     """AWS Lambda handler function with enhanced error handling."""
     try:
         # Retrieve IAM credentials for Kafka authentication
-        session_token, access_key_id, secret_access_key = get_iam_auth_token()
+        # session_token, access_key_id, secret_access_key = get_iam_auth_token()
 
         # Fetch MSK broker list and topic from environment variables
         kafka_brokers = os.getenv("MSK_BROKER_LIST").split(",")
         topic = os.getenv("MSK_TOPIC")
+        user = os.getenv("MSK_USER")
+        password = os.getenv("MSK_PWD")
 
         logger.info(f"Kafka brokers: {kafka_brokers}")
         logger.info(f"Target Kafka topic: {topic}")
 
         # Kafka Producer Configuration
         conf = {
-            'bootstrap.servers': kafka_brokers,
-            'security.protocol': 'SASL_SSL',
-            'sasl.mechanism': 'AWS_MSK_IAM',
-            # 'sasl.aws.credentials.provider': 'default',
-            'sasl.username': access_key_id,
-            'sasl.password': secret_access_key,
-            'sasl.oauthbearer.token': session_token
+            'bootstrap_servers': kafka_brokers,
+            'security_protocol': 'SASL_SSL',
+            'sasl_mechanism': 'SCRAM_SHA_512',
+            'sasl_plain_username': user,
+            'sasl_plain_password': password,
+            'value_serializer': lambda v: json.dumps(v).encode('utf-8'),
+            'key_serializer': lambda k: k.encode('utf-8'),
         }
 
         # Create Kafka producer
-        producer = Producer(**conf)
+        producer = KafkaProducer(**conf)
 
         # Process S3 event records
         for record in event['Records']:
