@@ -79,7 +79,7 @@ def lambda_handler(event, context):
             encoded_data = base64.b64encode(file_data).decode('utf-8')
 
             # Send the encoded file data to Kafka
-            producer.send(topic, key=object_key.encode('utf-8'), value=encoded_data.encode('utf-8'))
+            producer.send(topic, key=object_key, value={"image": encoded_data})
             producer.flush()
 
             logger.info(f"Published {object_key} to Kafka topic {topic}")
