@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "msk_scram_secret" {
-  name = "msk/svc-acct"
+  name = "AmazonMSK_SCRAM"
 }
 
 resource "aws_secretsmanager_secret_version" "msk_scram_secret_value" {
