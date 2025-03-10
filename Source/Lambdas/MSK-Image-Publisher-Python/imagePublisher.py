@@ -78,6 +78,8 @@ def lambda_handler(event, context):
             response = s3_client.get_object(Bucket=bucket_name, Key=object_key)
             file_data = response['Body'].read()
 
+            logger.info(f"Retrieved {object_key} of size {len(file_data)} bytes from S3 bucket {bucket_name}")
+
             # Encode the file data in Base64
             encoded_data = base64.b64encode(file_data).decode('utf-8')
 

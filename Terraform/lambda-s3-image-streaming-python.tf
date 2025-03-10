@@ -9,7 +9,7 @@ resource "aws_lambda_function" "s3_image_publisher_python" {
   runtime          = "python3.9"
   role             = aws_iam_role.lambda_execution_role.arn
   handler          = "imagePublisher.lambda_handler"
-  timeout          = 150
+  timeout          = 450
   memory_size      = 128
   filename         = data.archive_file.s3_image_publisher_python.output_path
   source_code_hash = data.archive_file.s3_image_publisher_python.output_base64sha256
