@@ -63,6 +63,14 @@ jobs:
       with:
         python-version: '3.9'
 
+        # Set up AWS credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_RESOURCE_REGION }}
+
     # Note if Manual Run
     - name: Manual Run
       if: ${{ inputs.manual_run == 'true' }}
@@ -94,7 +102,20 @@ jobs:
     - name: Terraform Plan
       run: terraform -chdir=Terraform plan
 
-    # On push to "main", build or change infrastructure according to Terraform configuration files
-    # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    # Build or change infrastructure according to Terraform configuration files
     - name: Terraform Apply
       run: terraform -chdir=Terraform apply -auto-approve
+
+    # Capture Terraform Outputs
+    - name: Terraform Outputs
+      run: |
+        msk_cluster_arn=$(terraform -chdir=Terraform output -raw msk_cluster_arn)
+        echo "MSK_CLUSTER_ARN=$msk_cluster_arn" >> $GITHUB_ENV
+
+    # Create a kafka SCRAM user for authentication
+    - name: Create Kafka SCRAM User
+      run: |
+        aws kafka create-scram-secret \
+        --cluster-arn $MSK_CLUSTER_ARN \
+        --secret-name msk-svc-user \
+        --secret-string '{"username": "${{secrets.MSK_USER}}", "password": "${{secrets.MSK_PASSWORD}}"}'

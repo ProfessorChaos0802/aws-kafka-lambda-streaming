@@ -32,6 +32,8 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
   client_authentication {
     sasl {
       iam = true
+
+      scram = true
     }
   }
 
@@ -64,4 +66,8 @@ resource "aws_msk_cluster" "msk_lambda_streaming_cluster" {
 
 output "broker_list" {
   value = aws_msk_cluster.msk_lambda_streaming_cluster.bootstrap_brokers_sasl_iam
+}
+
+output "msk_cluster_arn" {
+  value = aws_msk_cluster.msk_lambda_streaming_cluster.arn
 }
